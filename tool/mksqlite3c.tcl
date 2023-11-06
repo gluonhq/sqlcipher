@@ -451,6 +451,8 @@ foreach file {
    sqlite3session.c
    fts5.c
    stmt.c
+
+   userauth.c
 } {
   copy_file $srcdir/$file
 }
