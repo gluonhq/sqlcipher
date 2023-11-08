@@ -1,0 +1,38 @@
+name: build-amalgamation
+on:
+  workflow_dispatch:
+  push:
+    tags:
+      - '*.*.*'
+
+jobs:
+  build:
+    permissions:
+      contents: write
+    name: Build amalgamated sources
+    runs-on: ubuntu-20.04
+    steps:
+      - uses: actions/checkout@v3
+      - name: Source versions from VERSION file
+        run: echo "version=$(cat VERSION)" >> $GITHUB_ENV
+      - name: Build
+        run: |
+          mkdir sqlcipher-${{ env.version }}
+          cd sqlcipher-${{ env.version }}
+          ./configure
+          make
+          cd ..
+          zip -r sqlcipher-amal-${{ env.version }}.zip sqlcipher-${{ env.version }}
+      - uses: actions/upload-artifact@v3
+        with:
+          name: SQLCipher amalgamation zip
+          path: |
+            ./sqlcipher-amal-${{ env.version }}.zip
+      - name: Deploy Release
+        uses: softprops/action-gh-release@v1
+        if: startsWith(github.ref, 'refs/tags/')
+        with:
+          name: "SQLCipher-${{ env.version }}"
+          generate_release_notes: true
+          files: |
+            ./sqlcipher-amal-${{ env.version }}.zip
