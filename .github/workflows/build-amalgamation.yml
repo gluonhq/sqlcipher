@@ -20,7 +20,7 @@ jobs:
           mkdir sqlcipher-${{ env.version }}
           cd sqlcipher-${{ env.version }}
           ../configure
-          make
+          make sqlite3.c
           cd ..
           zip -r sqlcipher-amal-${{ env.version }}.zip sqlcipher-${{ env.version }}
       - uses: actions/upload-artifact@v3
