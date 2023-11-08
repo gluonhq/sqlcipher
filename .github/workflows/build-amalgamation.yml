@@ -19,7 +19,7 @@ jobs:
         run: |
           mkdir sqlcipher-${{ env.version }}
           cd sqlcipher-${{ env.version }}
-          ./configure
+          ../configure
           make
           cd ..
           zip -r sqlcipher-amal-${{ env.version }}.zip sqlcipher-${{ env.version }}
